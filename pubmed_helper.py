@@ -5,7 +5,7 @@ import explorer_helper as exh
 
 STOPWORDS = exh.load_json('config/stopwords.json')["stopwords"]
 
-def _clean_text(text):
+def _clean_text(text, stopwords=STOPWORDS):
     text = text.lower()
 
     our_punctuation = list(punctuation)
@@ -18,14 +18,14 @@ def _clean_text(text):
     i = 0
     while i < len(words):
         words[i] = stemmer.stem(words[i])
-        if len(words[i]) < 3 or words[i] in STOPWORDS:
+        if len(words[i]) < 3 or words[i] in stopwords:
             words.remove(words[i])
             i -= 1
         i += 1
 
     return ' '.join(map(str,words)) # converting list of words to a text
 
-def extract_features(data):
+def extract_features(data, stopwords=STOPWORDS):
     tags = set()
     docs = []
     total_text = []
@@ -51,7 +51,7 @@ def extract_features(data):
         sorted_denotations.reverse()
         for begin, end, obj in sorted_denotations:
             text = text[:begin] + obj + " " + text[end:]
-        doc_data["text"] = _clean_text(text)
+        doc_data["text"] = _clean_text(text, stopwords)
         total_text.append(doc_data["text"])
         docs.append(doc_data)
 

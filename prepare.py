@@ -11,6 +11,7 @@ import utils
 from pprint import pprint
 
 CONFIG = None
+LEGAL_EXT = ['txt', 'json']
 
 def check_args(argv):
     parser = argparse.ArgumentParser(description="Prepares publications \
@@ -31,14 +32,17 @@ def check_args(argv):
 
     return args
 
-def read_file(filename):
-    f = open(filename)
-    lines = f.readlines()
-    pmids = []
-    for line in lines:
-        pmids.append(line.replace('\n', ''))
-    f.close()
-    return pmids
+def read_file(filename, extension):
+    if extension == "txt":
+        f = open(filename)
+        lines = f.readlines()
+        pmids = []
+        for line in lines:
+            pmids.append(line.replace('\n', ''))
+        f.close()
+        return pubtator_data(pmids)
+    elif extension == "json":
+        return exh.load_json(filename)
 
 def pubtator_data(pmids_list):
         all_data = []
@@ -60,19 +64,13 @@ def run(args):
     global CONFIG
     CONFIG = exh.load_json('config/{0}.json'.format(args.CONFIG))
     extension = args.FILE.split('.')[-1]
-    if extension == 'txt':
-        pmids_l = read_file(args.FILE)
-        documents_l = pubtator_data(pmids_l)
-        docs, _ = pbmdh.extract_features(documents_l)
-        ngh.extract_ngrams(docs, CONFIG['NGRAMS'])
-        exh.create_directory('documents')
-        exh.write_json(docs, 'documents/{0}.json'.format(args.OUTPUT))
 
-    elif extension == 'json':
-        documents_l = exh.load_json(args.FILE)
+    if extension in LEGAL_EXT:
+        exh.create_directory('documents')
+        documents_l = read_file(args.FILE, extension)
+        exh.write_json(documents_l, 'documents/{0}.json'.format(args.OUTPUT+'-back'))
         docs, _ = pbmdh.extract_features(documents_l)
         ngh.extract_ngrams(docs, CONFIG['NGRAMS'])
-        exh.create_directory('documents')
         exh.write_json(docs, 'documents/{0}.json'.format(args.OUTPUT))
     else:
         utils.display_fail('Extension of input file not supported. Required : txt or json. Received : {0}'.format(extension))

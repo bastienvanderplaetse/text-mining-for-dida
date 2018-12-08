@@ -1,5 +1,6 @@
 {
   "NGRAMS": 3,
-  "DIDA_DOCS": "dida.json",
-  "NOTDIDA_DOCS": "not_dida.json"
+  "DIDA_DOCS": "dida",
+  "NOTDIDA_DOCS": "not_dida",
+  "NTOPWORDS": 20
 }
