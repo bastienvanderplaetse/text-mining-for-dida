@@ -1,79 +1,151 @@
-import urllib.request as req
+"""Prepare PubMed publications before classification tasks
+
+This script allows the user to prepare PubMed publications before classification.
+This process is done by extracting n-grams for each publication. The maximum
+value of `n` can be modified in the configuration file.
+
+The script can be run through the following command :
+`python prepare.py FILE OUTPUT CONFIG`
+where `FILE` is a .txt file containing a list of PMIDs or a .json file
+containing publications downloaded with the `download.py` script,
+`OUPUT` is the name of the output file to save the publications and their n-grams
+(this name must be the same as the configuration field `DIDA_DOCS` or
+`NOTDIDA_DOCS` for easier use)
+and `CONFIG` is the name of the configuration file situated in the `config`
+folder (without the extension).
+"""
 
 import argparse
-import json
 import sys
 
+import display
 import explorer_helper as exh
 import ngrams_helper as ngh
 import pubmed_helper as pbmdh
-import utils
-from pprint import pprint
 
 CONFIG = None
-LEGAL_EXT = ['txt', 'json']
+
+DIRECTORY = "documents"
+BACK_FILENAME = DIRECTORY + "/{0}-back.json"
+NGRAMS_FILENAME = DIRECTORY + "/{0}.json"
+LEGAL_EXTENSIONS = ["txt", "json"]
+
+
+
+""" CONFIGURATION """
 
 def check_args(argv):
+    """Checks and parses the arguments of the command typed by the user
+
+    Parameters
+    ----------
+    argv :
+        The arguments of the command typed by the user
+
+    Returns
+    -------
+    ArgumentParser
+        the values of the arguments of the commande typed by the user
+    """
     parser = argparse.ArgumentParser(description="Prepares publications \
         for classification")
-    parser.add_argument("FILE", type=str, help="the name of the file \
+    parser.add_argument('FILE', type=str, help="the name of the file \
         containing PMIDs or publications at JSON format. \
         Can eventually containing the corresponding label")
-    parser.add_argument('OUTPUT', type=str, help="the name of the output file (without extension)")
-    parser.add_argument('CONFIG', type=str, help="the name of the configuration file (without extension)")
-    # parser.add_argument("-s", "--skiprows", type=int, help="the number of rows to skip")
-    #
+    parser.add_argument('OUTPUT', type=str, help="the name of the output \
+        file (without extension)")
+    parser.add_argument('CONFIG', type=str, help="the name of the configuration \
+        file (without extension)")
+
     args = parser.parse_args()
-    # if args.skiprows == None:
-    #     args.skiprows = 27
-    #     print(bcolors.WARNING + bcolors.BOLD + "No skiprows parameter in arguments. Value by default is {0}.".format(args.skiprows)  + bcolors.ENDC)
-    #
-    # print("The {0} first rows will be ignored.".format(args.skiprows))
 
     return args
 
+
+
+""" FUNCTIONS """
+
 def read_file(filename, extension):
+    """Returns publications based on a text file containing PMIDs or a JSON file
+    containing publications
+
+    Parameters
+    ----------
+    filename :
+        The name of the file to read
+    extension :
+        The extension of the file
+
+    Returns
+    -------
+    list
+        a list of publications at JSON format
+    """
     if extension == "txt":
+        print("Received a text file - Reading PMIDs list")
+        # Read each PMID in the file
         f = open(filename)
         lines = f.readlines()
         pmids = []
         for line in lines:
             pmids.append(line.replace('\n', ''))
         f.close()
-        return pubtator_data(pmids)
+
+        # Downloads and returns publications
+        print("Downloading publications")
+        return pbmdh.download_publications(pmids)
     elif extension == "json":
+        print("Received a JSON file - Getting publications")
         return exh.load_json(filename)
 
-def pubtator_data(pmids_list):
-        all_data = []
-        stepsize = 50
-        for i in range(0, len(pmids_list), stepsize):
-            subset = pmids_list[i:i + stepsize]
-            pmids = ""
-            for id in subset[:-1]:
-                pmids += id + ','
-            pmids += subset[-1]
-            # print(pmids)
-            url = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/{0}/JSON/".format(pmids)
-            response = req.urlopen(url).read().decode('utf-8')
-            response = json.loads(response)
-            all_data.extend(response)
-        return all_data
+
+
+""" EXECUTION """
 
 def run(args):
+    """Executes the main process of the script
+
+    Parameters
+    ----------
+    args : ArgumentParser
+        The arguments of the command typed by the user
+    """
     global CONFIG
-    CONFIG = exh.load_json('config/{0}.json'.format(args.CONFIG))
+    CONFIG = exh.load_json("config/{0}.json".format(args.CONFIG))
+
+    # Extension of the input file
     extension = args.FILE.split('.')[-1]
 
-    if extension in LEGAL_EXT:
-        exh.create_directory('documents')
+    if extension in LEGAL_EXTENSIONS:
+        exh.create_directory(DIRECTORY)
+
+        # Get publications
+        print("Getting publications")
         documents_l = read_file(args.FILE, extension)
-        exh.write_json(documents_l, 'documents/{0}.json'.format(args.OUTPUT+'-back'))
-        docs, _ = pbmdh.extract_features(documents_l)
+        display.display_ok("Getting publications done")
+
+        # Save publications
+        filename = BACK_FILENAME.format(args.OUTPUT)
+        exh.write_json(documents_l, filename)
+        display.display_info("Publications saved in {0}".format(filename))
+
+        # Insert PubTator annotations in the abstracts
+        print("Inserting PubTator annotations in abstracts")
+        docs = pbmdh.extract_features(documents_l)
+        display.display_ok("Inserting PubTator annotations in abstracts done")
+
+        # Extract n-grams
+        print("Extracting n-grams")
         ngh.extract_ngrams(docs, CONFIG['NGRAMS'])
-        exh.write_json(docs, 'documents/{0}.json'.format(args.OUTPUT))
+        display.display_ok("Extracting n-grams done")
+
+        # Save publications and their n-grams
+        filename = NGRAMS_FILENAME.format(args.OUTPUT)
+        exh.write_json(docs, filename)
+        display.display_info("Publications and n-grams saved in {0}".format(filename))
     else:
-        utils.display_fail('Extension of input file not supported. Required : txt or json. Received : {0}'.format(extension))
+        # The input file has not a valid extension
+        display.display_fail("Extension of input file not supported. Required : txt or json. Received : {0}".format(extension))
         sys.exit(0)
 
 if __name__=="__main__":

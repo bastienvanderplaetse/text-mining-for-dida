@@ -1,3 +1,15 @@
+"""Some functions to work with n-grams
+
+This script contains some functions to help the user to deal with n-grams in
+PubMed publications.
+
+This file can be imported as a module and contains the following functions:
+
+    * count_occurences -
+    * extract_ngrams - extracts the n-grams of a set of publications
+    * normalize_occurences -
+"""
+
 from nltk import ngrams
 
 # def prepare_documents_ngrams(docs, n):
@@ -5,16 +17,6 @@ from nltk import ngrams
 #         doc["grams"] = dict()
 #         for i in range(1, n+1):
 #             doc["grams"][i] = []
-
-def extract_ngrams(documents, n):
-    for doc in documents:
-        grams_l = []
-        doc["grams"] = dict()
-        for i in range(1, n+1):
-            doc["grams"][i] = []
-            grams = ngrams(doc["text"].split(), i)
-            for gram in grams:
-                doc["grams"][i].append(gram)
 
 def count_occurences(n, documents):
     occurences = dict()
@@ -35,6 +37,25 @@ def count_occurences(n, documents):
     occurences.reverse()
 
     return occurences
+
+def extract_ngrams(documents, n):
+    """Extracts the n-grams of a set of publications
+
+    Parameters
+    ----------
+    documents : list
+        The list of documents for which n-grams extraction is required
+    n : int
+        The maximum size of n-grams that need to be extracted
+    """
+    for doc in documents:
+        grams_l = []
+        doc['grams'] = dict()
+        for i in range(1, n+1):
+            doc['grams'][i] = []
+            grams = ngrams(doc['text'].split(), i)
+            for gram in grams:
+                doc['grams'][i].append(gram)
 
 def normalize_occurences(occurences, n_docs):
     normalized = []

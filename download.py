@@ -16,9 +16,9 @@ import argparse
 import numpy as np
 import sys
 
+import display
 import explorer_helper as exh
 import pubmed_helper as pbmdh
-import display
 
 CONFIG = None
 
