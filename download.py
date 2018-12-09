@@ -1,4 +1,4 @@
-"""Download PubMed publications
+"""Downloads PubMed publications
 
 This script allows the user to download PubMed publications between two
 particular dates (see configuration files). The downloaded publications will be

@@ -1,4 +1,4 @@
-"""Prepare PubMed publications before classification tasks
+"""Prepares PubMed publications before classification tasks
 
 This script allows the user to prepare PubMed publications before classification.
 This process is done by extracting n-grams for each publication. The maximum
@@ -71,9 +71,9 @@ def read_file(filename, extension):
 
     Parameters
     ----------
-    filename :
+    filename : str
         The name of the file to read
-    extension :
+    extension : str
         The extension of the file
 
     Returns

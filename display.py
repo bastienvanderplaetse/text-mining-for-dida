@@ -22,20 +22,42 @@ class bcolors:
 
 def display(message, color):
     """Prints a message with a specific color
+
+    Parameters
+    ----------
+    message : str
+        The message to print
+    color : bcolors
+        The color used to print the message
     """
     print(color + bcolors.BOLD + message + bcolors.ENDC)
 
 def display_fail(message):
     """Prints an error message in red
+
+    Parameters
+    ----------
+    message : str
+        The message to print
     """
     display(message, bcolors.FAIL)
 
 def display_ok(message):
     """Prints a success message in green
+
+    Parameters
+    ----------
+    message : str
+        The message to print
     """
     display(message, bcolors.OKGREEN)
 
 def display_info(message):
     """Prints an informative message in blue
+
+    Parameters
+    ----------
+    message : str
+        The message to print
     """
     display(message, bcolors.OKBLUE)

@@ -100,7 +100,7 @@ def extract_features(data, stopwords=STOPWORDS):
     ----------
     data : list
         The list of publications to deal with
-    stopwords: list
+    stopwords: list, optional
         A list of stopwords
 
     Returns
