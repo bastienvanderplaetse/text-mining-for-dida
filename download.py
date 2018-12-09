@@ -40,7 +40,7 @@ def check_args(argv):
         the values of the arguments of the commande typed by the user
     """
     parser = argparse.ArgumentParser(description="Downloads Pubmed publications about digenic diseases.")
-    parser.add_argument("DIDA", type=str, help="the file name containing the list of pmids present in DIDA")
+    parser.add_argument('DIDA', type=str, help="the file name containing the list of pmids present in DIDA")
     parser.add_argument('CONFIG', type=str, help="the name of the configuration file (without extension)")
 
     args = parser.parse_args()
@@ -53,17 +53,18 @@ def check_args(argv):
 
 def download_doc(pmids_list):
     """Downloads publications based on a PMIDs list and saves them into a
-    JSON file.
+    JSON file
 
     Parameters
     ----------
     pmids_list : list
         The list containing the PMIDs of the publications to download
     """
-    print("Downloading PMIDs for Not-DIDA.")
+    print("Downloading PMIDs for Not-DIDA")
     all_data = pbmdh.download_publications(pmids_list)
-    exh.write_json(all_data, CONFIG["NOTDIDA_DOCS"]+'.json')
-    utils.display_info("Not-DIDA publications saved in {0}")
+    filename = CONFIG['NOTDIDA_DOCS'] + ".json"
+    exh.write_json(all_data, filename)
+    display.display_info("Not-DIDA publications saved in {0}".format(filename))
 
 def filter(pmids, known_pmids):
     """Filters from new PMIDs the ones that are already in DIDA
@@ -85,7 +86,7 @@ def filter(pmids, known_pmids):
     for pmid in pmids:
         if not pmid in known_pmids:
             notdida.append(pmid)
-    utils.display_ok("Filtering PMIDs done.")
+    display.display_ok("Filtering PMIDs done.")
     return notdida
 
 def get_dida_pmids(dida_pmids):
@@ -108,7 +109,7 @@ def get_dida_pmids(dida_pmids):
     for index, line in enumerate(lines):
         pmids.append(line.replace('\n', ''))
     f.close()
-    utils.display_ok("Retrieving PMIDs done. {0} PMIDs found.".format(len(pmids)))
+    display.display_ok("Retrieving PMIDs done. {0} PMIDs found".format(len(pmids)))
     return pmids
 
 def get_pmids_by_dates():
@@ -119,18 +120,18 @@ def get_pmids_by_dates():
     list
         the list of the PMIDs of the found publications
     """
-    start_year = CONFIG["START_YEAR"]
-    end_year = CONFIG["SPLIT_YEAR"]
-    print("Retrieving new PMIDs between {0} and {1}.".format(start_year, end_year))
+    start_year = CONFIG['START_YEAR']
+    end_year = CONFIG['SPLIT_YEAR']
+    print("Retrieving new PMIDs between {0} and {1}".format(start_year, end_year))
 
     ids = []
-    query="digenic+AND+{0}[pdat]"
+    query = "digenic+AND+{0}[pdat]"
     for year in range(start_year, end_year):
         ids.extend(pbmdh.get_pmids(query.format(year)))
 
     x = np.array(ids)
     x = list(np.unique(x))
-    utils.display_ok("{0} new PMIDs found.".format(len(x)))
+    display.display_ok("{0} new PMIDs found".format(len(x)))
     return x
 
 
@@ -147,7 +148,7 @@ def run(dida_pmids):
     """
     global CONFIG
     # Load configuration
-    CONFIG = exh.load_json('config/{0}.json'.format(args.CONFIG))
+    CONFIG = exh.load_json("config/{0}.json".format(args.CONFIG))
 
     # Get DIDA PMIDs
     known_pmids = get_dida_pmids(dida_pmids)
@@ -155,9 +156,9 @@ def run(dida_pmids):
     pmids = get_pmids_by_dates()
     notdida_pmids = filter(pmids, known_pmids)
 
-    utils.display_info("Total PMIDs between {0} and {1} : {2}".format(CONFIG["START_YEAR"], CONFIG["SPLIT_YEAR"], len(pmids)))
-    utils.display_info("Total PMIDs in DIDA : {0}".format(len(known_pmids)))
-    utils.display_info("Total PMIDs in Not-DIDA : {0}".format(len(notdida_pmids)))
+    display.display_info("Total PMIDs between {0} and {1} : {2}".format(CONFIG['START_YEAR'], CONFIG['SPLIT_YEAR'], len(pmids)))
+    display.display_info("Total PMIDs in DIDA : {0}".format(len(known_pmids)))
+    display.display_info("Total PMIDs in Not-DIDA : {0}".format(len(notdida_pmids)))
 
     # Download Not-DIDA publications
     download_doc(notdida_pmids)

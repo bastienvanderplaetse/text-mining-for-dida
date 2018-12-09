@@ -21,7 +21,7 @@ from string import punctuation
 
 import explorer_helper as exh
 
-STOPWORDS = exh.load_json('config/stopwords.json')["stopwords"]
+STOPWORDS = exh.load_json("config/stopwords.json")['stopwords']
 URL_DOWNLOAD = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.cgi/BioConcept/{0}/JSON/"
 URL_PMIDS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={0}&retmax={1}"
 
@@ -46,7 +46,7 @@ def clean_text(text, stopwords=STOPWORDS):
     # Remove punctuation marks
     our_punctuation = list(punctuation)
     for c in our_punctuation:
-        text = text.replace(c,"")
+        text = text.replace(c,'')
 
     stemmer = PorterStemmer()
     words = text.split(' ')
@@ -112,27 +112,27 @@ def extract_features(data, stopwords=STOPWORDS):
     docs = []
     for document in data:
         doc_data = dict()
-        doc_data["pmid"] = document["sourceid"]
-        text = document["text"]
+        doc_data['pmid'] = document['sourceid']
+        text = document['text']
 
         # Insert PubTator annotations inside abstract
-        denotations = document["denotations"]
+        denotations = document['denotations']
         sorted_denotations = []
         for denotation in denotations:
-            begin = denotation["span"]["begin"]
-            end = denotation["span"]["end"]
-            obj = denotation["obj"]
+            begin = denotation['span']['begin']
+            end = denotation['span']['end']
+            obj = denotation['obj']
             for c in punctuation:
-                obj = obj.replace(c, "")
+                obj = obj.replace(c, '')
             tags.add(obj)
             doc_data[obj] = doc_data.get(obj,0)+1
             sorted_denotations.append([begin,end,obj])
         sorted_denotations.sort()
         sorted_denotations.reverse()
         for begin, end, obj in sorted_denotations:
-            text = text[:begin] + obj + " " + text[end:]
+            text = text[:begin] + obj + ' ' + text[end:]
 
-        doc_data["text"] = clean_text(text, stopwords)
+        doc_data['text'] = clean_text(text, stopwords)
         docs.append(doc_data)
 
     return docs
