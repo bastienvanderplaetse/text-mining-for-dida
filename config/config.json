@@ -2,5 +2,9 @@
   "NGRAMS": 3,
   "DIDA_DOCS": "dida",
   "NOTDIDA_DOCS": "not_dida",
+
+  "START_YEAR": 1950,
+  "SPLIT_YEAR": 2017,
+  
   "NTOPWORDS": 20
 }
