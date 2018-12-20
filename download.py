@@ -163,6 +163,6 @@ def run(dida_pmids):
     # Download Not-DIDA publications
     download_doc(notdida_pmids)
 
-if __name__=="__main__":
+if __name__ == "__main__":
     args = check_args(sys.argv)
     run(args.DIDA)

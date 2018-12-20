@@ -148,6 +148,6 @@ def run(args):
         display.display_fail("Extension of input file not supported. Required : txt or json. Received : {0}".format(extension))
         sys.exit(0)
 
-if __name__=="__main__":
+if __name__ == "__main__":
     args = check_args(sys.argv)
     run(args)

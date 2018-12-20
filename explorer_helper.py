@@ -14,6 +14,9 @@ This file can be imported as a module and contains the following functions:
 import csv
 import json
 import os
+import tabulate
+
+tabulate.LATEX_ESCAPE_RULES={}
 
 def create_directory(dir_name):
     """Creates a directory if it does not exist
@@ -55,6 +58,19 @@ def write_json(data, filename):
     with open(filename, 'w') as fp:
         json.dump(data, fp)
 
+def write_latex_table(data, filename):
+    """Saves data into a text file in a LaTex table format
+
+    Parameters
+    ----------
+    data :
+        The data to save in a text file
+    filename : str
+        The name of the text file in which the data must be saved
+    """
+    latex_tab = tabulate.tabulate(data,tablefmt='latex')
+    write_text(latex_tab, filename)
+
 # TODO finish this documentation
 def write_csv(data, cols, filename):
     """Saves data into a CSV file
@@ -72,3 +88,16 @@ def write_csv(data, cols, filename):
         csv_out=csv.writer(out)
         csv_out.writerow(cols)
         csv_out.writerows(data)
+
+def write_text(data, filename):
+    """Saves data into a text file
+
+    Parameters
+    ----------
+    data :
+        The data to save in a text file
+    filename : str
+        The name of the text file in which the data must be saved
+    """
+    with open(filename, 'w') as fp:
+        fp.write(data)

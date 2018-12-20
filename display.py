@@ -10,6 +10,9 @@ This file can be imported as a module and contains the following functions:
     * display_info - prints an informative message in blue
 """
 
+import os
+import sys
+
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -19,6 +22,11 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+def disable_print():
+    """Disables displays
+    """
+    sys.stdout = open(os.devnull, 'w')
 
 def display(message, color):
     """Prints a message with a specific color
@@ -61,3 +69,8 @@ def display_info(message):
         The message to print
     """
     display(message, bcolors.OKBLUE)
+
+def enable_print():
+    """Enables displays
+    """
+    sys.stdout = sys.__stdout__

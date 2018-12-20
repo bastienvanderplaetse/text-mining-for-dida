@@ -5,6 +5,8 @@
 
   "START_YEAR": 1950,
   "SPLIT_YEAR": 2017,
-  
-  "NTOPWORDS": 20
+
+  "NTOPWORDS": 20,
+
+  "TETA_COVERWORDS": 0.5
 }

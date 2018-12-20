@@ -466,6 +466,6 @@ def run(args):
     for i in range(1, n+1):
         extract_ngrams(i, deepcopy(dida_data), deepcopy(notdida_data))
 
-if __name__=="__main__":
+if __name__ == "__main__":
     args = check_args(sys.argv)
     run(args)
