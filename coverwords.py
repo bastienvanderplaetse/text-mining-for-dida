@@ -102,16 +102,16 @@ def check_score(set_cover, subsets, sets, objects):
                 covered_objs.append(obj)
     n_covered_objs = len(covered_objs)
 
-    scores = "Total of n-grams : " + str(n_sets) + "\n" \
-    + "Number of n-grams above the half : " + str(n_subsets) + "\n" \
+    scores = "Total number of n-grams : " + str(n_sets) + "\n" \
+    + "Number of n-grams above the threshold : " + str(n_subsets) + "\n" \
     + "--" + "\n" \
-    + "Total of documents : " + str(n_obj) + "\n" \
-    + "Total of documents in n-grams above the half : " + str(n_tot_covered_objs) + "\n" \
+    + "Total number of publications : " + str(n_obj) + "\n" \
+    + "Number of publications covered by n-grams above the threshold : " + str(n_tot_covered_objs) + "\n" \
+    + "Ratio of publications covered by n-grams above the threshold : " + str(n_tot_covered_objs / n_obj) + "\n" \
     + "--" + "\n" \
     + "Number of n-grams in set cover : " + str(set_cover_size) + "\n" \
     + "Number of documents covered by set cover : " + str(n_covered_objs) + "\n" \
-    + "Score above the half : " + str(n_covered_objs/n_tot_covered_objs) + "\n" \
-    + "Score global : " + str(n_covered_objs/n_obj) + "\n" \
+    + "Ratio of publications covered by set cover : " + str(n_covered_objs/n_obj) + "\n" \
     + "--" + "\n" \
     + "Set Cover : " + "\n"
 
