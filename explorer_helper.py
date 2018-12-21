@@ -71,16 +71,15 @@ def write_latex_table(data, filename):
     latex_tab = tabulate.tabulate(data,tablefmt='latex')
     write_text(latex_tab, filename)
 
-# TODO finish this documentation
 def write_csv(data, cols, filename):
     """Saves data into a CSV file
 
     Parameters
     ----------
-    data :
+    data : list
         The data to save in a CSV file
-    cols:
-        ???
+    cols: list
+        The name of the columns
     filename : str
         The name of the CSV file in which the data must be saved
     """

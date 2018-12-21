@@ -107,3 +107,4 @@ venv.bak/
 !config/*
 topwords/
 coverwords/
+wordsdistribution/
