@@ -5,18 +5,14 @@ PubMed publications.
 
 This file can be imported as a module and contains the following functions:
 
-    * count_occurences -
+    * count_occurences - counts the number of documents covered by each n-grams
+    in a documents set
     * extract_ngrams - extracts the n-grams of a set of publications
-    * normalize_occurences -
+    * normalize_occurences - normalizes the number of documents covered by each
+    n-grams in a documents set
 """
 
 from nltk import ngrams
-
-# def prepare_documents_ngrams(docs, n):
-#     for doc in docs:
-#         doc["grams"] = dict()
-#         for i in range(1, n+1):
-#             doc["grams"][i] = []
 
 def count_occurrences(n, documents):
     """Counts the number of documents covered by each n-grams in a documents set

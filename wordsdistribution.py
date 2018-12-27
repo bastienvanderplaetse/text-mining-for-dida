@@ -1,3 +1,17 @@
+"""Analyzes the n-grams distributions in PubMed publications
+
+This script allows the user to have an overview on the distribution of n-grams
+in PubMed publications in order to use the Words Distribution based classifiers.
+
+The maximum length of studied n-grams can be configured in the configuration
+file.
+
+The script can be run through the following command :
+`python wordsdistribution.py CONFIG`
+where `CONFIG` is the name of the configuration file situated in the `config`
+folder (without the extension).
+"""
+
 import argparse
 import sys
 
@@ -121,8 +135,7 @@ def save_to_file(merged, n):
 
     l_merged = []
     for word in merged:
-        l_words = list(word[0])
-        ngram = "(" + ", ".join(l_words) + ")"
+        ngram = "(" + word[0] + ")"
         l_merged.append((ngram, word[1][dida], word[1][notdida], (word[1][dida] - word[1][notdida])))
 
     exh.write_csv(l_merged, ["N-gram", "% DIDA", "% NotDIDA", "Diff"], FILENAME.format(n))

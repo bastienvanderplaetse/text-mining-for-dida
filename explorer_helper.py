@@ -7,8 +7,10 @@ This file can be imported as a module and contains the following functions:
 
     * create_directory - creates a directory if it does not exist
     * load_json - loads a JSON file
-    * write_json - saves data into a JSON file
     * write_csv - saves data into a CSV file
+    * write_json - saves data into a JSON file
+    * write_latex_table - saves data into a text file in a LaTex table format
+    * write_text - saves data into a text file
 """
 
 import csv
@@ -45,6 +47,23 @@ def load_json(filename):
     with open(filename, 'r') as f:
         return json.load(f)
 
+def write_csv(data, cols, filename):
+    """Saves data into a CSV file
+
+    Parameters
+    ----------
+    data : list
+        The data to save in a CSV file
+    cols: list
+        The name of the columns
+    filename : str
+        The name of the CSV file in which the data must be saved
+    """
+    with open(filename,'w') as out:
+        csv_out=csv.writer(out)
+        csv_out.writerow(cols)
+        csv_out.writerows(data)
+
 def write_json(data, filename):
     """Saves data into a JSON file
 
@@ -70,23 +89,6 @@ def write_latex_table(data, filename):
     """
     latex_tab = tabulate.tabulate(data,tablefmt='latex')
     write_text(latex_tab, filename)
-
-def write_csv(data, cols, filename):
-    """Saves data into a CSV file
-
-    Parameters
-    ----------
-    data : list
-        The data to save in a CSV file
-    cols: list
-        The name of the columns
-    filename : str
-        The name of the CSV file in which the data must be saved
-    """
-    with open(filename,'w') as out:
-        csv_out=csv.writer(out)
-        csv_out.writerow(cols)
-        csv_out.writerows(data)
 
 def write_text(data, filename):
     """Saves data into a text file

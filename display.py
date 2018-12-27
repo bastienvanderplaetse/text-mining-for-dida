@@ -4,10 +4,12 @@ This script contains some functions to help the user to display colored messages
 
 This file can be imported as a module and contains the following functions:
 
+    * disable_print - disables displays
     * display - prints a message with a specific color
     * display_fail - prints an error message in red
     * display_ok - prints a success message in green
     * display_info - prints an informative message in blue
+    * enable_print - enables displays
 """
 
 import os

@@ -26,7 +26,7 @@ URL_DOWNLOAD = "https://www.ncbi.nlm.nih.gov/CBBresearch/Lu/Demo/RESTful/tmTool.
 URL_PMIDS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term={0}&retmax={1}"
 
 def clean_text(text, stopwords=STOPWORDS):
-    """Lowerizez and stems publications abstracts
+    """Lowerizes and stems publications abstracts
 
     Parameters
     ----------
