@@ -47,6 +47,27 @@ def load_json(filename):
     with open(filename, 'r') as f:
         return json.load(f)
 
+def save_to_log(results, model, key, filename):
+    """Saves the evolution of the confusion matrix and the f1-score in JSON file
+
+    Parameters
+    ----------
+    results : dict
+        The results of the classifier for different value of the threshold
+    model : str
+        The prefix string of the classifier
+    """
+    data = dict()
+    for index, v in enumerate(results[key]):
+        data[v] = dict()
+        data[v]['tn'] = int(results['tn'][index])
+        data[v]['tp'] = int(results['tp'][index])
+        data[v]['fn'] = int(results['fn'][index])
+        data[v]['fp'] = int(results['fp'][index])
+        data[v]['score'] = float(results['score'][index])
+
+    write_json(data, filename)
+
 def write_csv(data, cols, filename):
     """Saves data into a CSV file
 

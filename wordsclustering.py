@@ -50,9 +50,24 @@ def save_clusters(clusters):
     data['Ndw'] = Ndw
     data['W'] = W
 
-    filename = DIRECTORY + '/' + CONFIG['ALL_CLUSTERS_FILENAME']
-    exh.write_json(data, filename)
-    display.display_info("Clusters saved into " + filename)
+    directory = DIRECTORY + '/' + CONFIG['ALL_CLUSTERS_DIRECTORY']
+    exh.create_directory(directory)
+
+    # filename = DIRECTORY + '/' + CONFIG['ALL_CLUSTERS_FILENAME']
+    filename = directory + "/ndw.json"
+    exh.write_json(Ndw, filename)
+
+    filename = directory + "/W.json"
+    exh.write_json(W, filename)
+
+    cluster_directory = directory + "/clusters"
+    exh.create_directory(cluster_directory)
+
+    for i, c in clusters.items():
+        filename = cluster_directory + "/{0}.json".format(i)
+        exh.write_json(c, filename)
+
+    display.display_info("Data clusters saved into " + directory)
 
 ''' WORDS INFORMATION EXTRACTION '''
 
@@ -141,11 +156,9 @@ def run(args):
     # Load Not-DIDA publications
     notdida_data = exh.load_json(FILENAME_TEMPLATE.format(CONFIG['NOTDIDA_DOCS']))
 
-    docs = [deepcopy(dida_data), deepcopy(notdida_data)]
+    # docs = [deepcopy(dida_data), deepcopy(notdida_data)]
+    docs = [deepcopy(notdida_data), deepcopy(dida_data)]
     display.display_ok("Loading publications done")
-
-    # Real labels of each publication
-    y_true = np.append(np.ones(len(dida_data)), np.zeros(len(notdida_data)))
 
     print("Starting extraction of words information")
     extract_words_information(docs)

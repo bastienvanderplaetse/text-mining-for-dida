@@ -14,5 +14,5 @@
   "WORDS_DISTRIBUTION_STEP_THRESHOLD": 1,
 
   "CLUSTERING_CLASSES": ["notdida", "dida"],
-  "ALL_CLUSTERS_FILENAME": "clusters.json"
+  "ALL_CLUSTERS_DIRECTORY": "didaclusters"
 }

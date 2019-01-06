@@ -84,7 +84,7 @@ def csv_filenames(n):
         names.append(name)
     return names
 
-def save_to_log(results, model):
+def save_to_log(results, model, key):
     """Saves the evolution of the confusion matrix and the f1-score in JSON file
 
     Parameters
@@ -95,13 +95,13 @@ def save_to_log(results, model):
         The prefix string of the classifier
     """
     data = dict()
-    for index, threshold in enumerate(results['threshold']):
-        data[threshold] = dict()
-        data[threshold]['tn'] = int(results['tn'][index])
-        data[threshold]['tp'] = int(results['tp'][index])
-        data[threshold]['fn'] = int(results['fn'][index])
-        data[threshold]['fp'] = int(results['fp'][index])
-        data[threshold]['score'] = float(results['score'][index])
+    for index, v in enumerate(results[key]):
+        data[v] = dict()
+        data[v]['tn'] = int(results['tn'][index])
+        data[v]['tp'] = int(results['tp'][index])
+        data[v]['fn'] = int(results['fn'][index])
+        data[v]['fp'] = int(results['fp'][index])
+        data[v]['score'] = float(results['score'][index])
 
     exh.write_json(data, LOG_FILENAME.format(model))
 
@@ -209,25 +209,25 @@ def run(args):
 
     print("Strict Classifier training")
     results = train(StrictClassifier, deepcopy(data), csv_files, y_true)
-    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'strict_', DIRECTORY)
+    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'strict_', "threshold", "Threshold", DIRECTORY)
     scores.append(results['score'])
-    save_to_log(results, 'strict')
+    exh.save_to_log(results, "strict", "threshold", LOG_FILENAME.format("strict"))
     classifiers_names.append("Strict Classifier")
     display.display_ok("Strict Classifier training done")
 
     print("Split Weighted Classifier training")
     results = train(SplitWeightedClassifier, deepcopy(data), csv_files, y_true)
-    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'splitweighted_', DIRECTORY)
+    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'splitweighted_', "threshold", "Threshold", DIRECTORY)
     scores.append(results['score'])
-    save_to_log(results, 'splitweighted')
+    exh.save_to_log(results, "splitweighted", "threshold", LOG_FILENAME.format("splitweighted"))
     classifiers_names.append("Split Weighted Classifier")
     display.display_ok("Split Weighted Classifier training done")
 
     print("Weighted Classifier training")
     results = train(WeightedClassifier, deepcopy(data), csv_files, y_true)
-    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'weighted_', DIRECTORY)
+    plt.plot_confusion_matrix(results, len(dida_data), len(notdida_data), 'weighted_', "threshold", "Threshold", DIRECTORY)
     scores.append(results['score'])
-    save_to_log(results, 'weighted')
+    exh.save_to_log(results, "weighted", "threshold", LOG_FILENAME.format("weighted"))
     classifiers_names.append("Weighted Classifier")
     display.display_ok("Weighted Classifier training done")
 
